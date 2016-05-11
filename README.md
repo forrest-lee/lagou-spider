@@ -1,8 +1,10 @@
 # lagou_spider
 
-## envirioment
+## setting envirioment
 ```
 virtualenv venv
+source venv/bin/activate
+pip install -r package.txt
 ```
 
 ## start spider
