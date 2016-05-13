@@ -1,28 +1,19 @@
 # -*- coding: utf-8 -*-
 import sys
 import jieba
-import pymysql.cursors
+import pymongo
 
+client = pymongo.MongoClient("localhost", 27017)
 jieba.load_userdict("../userdict.txt")
 
 reload(sys)
 sys.setdefaultencoding('utf-8')
 
+
 class WordSeg(object):
-
-    db = 'lagou'
-    user = 'root'
-    passwd = ''
-
     def __init__(self):
-        self.dbc = pymysql.connect(
-                user = self.user,
-                passwd = self.passwd,
-                host = 'localhost',
-                database = self.db
-                )
-        self.cursor = self.dbc.cursor()
-        self.cursor.execute('set names utf8')
+        self.ignored_words = []
+        self.db = client.lagou
         self.load_ignoring()
 
     # XXX this class should not hold other objects,
@@ -30,41 +21,26 @@ class WordSeg(object):
     # see this link for details:
     # http://eli.thegreenplace.net/2009/06/12/safely-using-destructors-in-python
     def __del__(self):
-        self.cursor.close()
-        self.dbc.close()
+        self.db.close()
 
     def load_ignoring(self):
-        query = "select word from ignored_word"
-        self.cursor.execute(query)
-        ignored = {}
-        for word in self.cursor:
-            ignored[word[0]] = 1
-        self.ignored_words = ignored
-        # print self.ignored_words
+        ignores = self.db.ignored_word.find({})
+        for item in ignores:
+            print item
+            # self.ignored_words = ignores
 
     def segment(self):
-        query = "select distinct search_keyword from position"
-        self.cursor.execute(query)
-        keywords = [kw[0] for kw in self.cursor]
+        results = self.db.position.distinct('search_keyword')
+        keywords = [item.search_keyword for item in results]
         for kw in keywords:
             self.segment_one(kw)
 
     def segment_one(self, keyword):
-        print 'process keyword "%s"' % keyword
-
-        # XXX
-        # `execute' has a nasty bug of string formatting of mysql connector,
-        # when using `%s' and the keyword is 'C++'
-        query = '''
-        select job_desc from job_desc jd
-        inner join position p on jd.position_id = p.position_id
-        where p.search_keyword = %s
-        '''
-
-        self.cursor.execute(query, (keyword))
+        # print 'process keyword "%s"' % keyword
+        results = self.db.job_desc.find({}, {'job_desc': 1})
 
         all_jd = ''
-        for jd in self.cursor:
+        for jd in results:
             all_jd = all_jd + jd[0]
 
         counter = {}
@@ -75,13 +51,15 @@ class WordSeg(object):
             if seg not in counter:
                 counter[seg] = 0
             else:
-                counter[seg] = counter[seg] + 1
+                counter[seg] += 1
 
         for (word, cnt) in counter.iteritems():
-            self.cursor.execute(
-                    "insert into word_frequency (search_keyword, word, cnt) values (%s, %s, %s)",
-                    (keyword, word.encode('utf8', 'ignore'), cnt)
-                )
+            self.db.word_frequency.insert_one({
+                'search_keyword': keyword,
+                'word': word.encode('utf8', 'ignore'),
+                'cnt': cnt
+            })
+
 
 if '__main__' == __name__:
     ws = WordSeg()
