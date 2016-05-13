@@ -16,7 +16,7 @@ reload(sys)
 sys.setdefaultencoding('utf-8')
 
 
-class LagouPositionPipeline(object):
+class LagouPipeline(object):
     # FIXME move below to settings.py
 
     def __init__(self, user, passwd):
@@ -34,6 +34,9 @@ class LagouPositionPipeline(object):
     def close_spider(self, spider):
         self.db.close()
 
+
+
+class LagouPositionPipeline(LagouPipeline):
     def process_item(self, item, spider):
         if not isinstance(item, LagouPositionItem):
             return item
@@ -60,24 +63,6 @@ class LagouPositionPipeline(object):
 
 
 class LagouJobDescPipeline(object):
-    # FIXME move below to settings.py
-
-    def __init__(self, user, passwd):
-        # self.user = user
-        # self.passwd = passwd
-        pass
-
-    @classmethod
-    def from_crawler(cls, crawler):
-        return cls('TODO', 'TODO')
-
-    def open_spider(self, spider):
-        # TODO all instances of pipeline share one db conn.
-        self.db = client.lagou
-
-    def close_spider(self, spider):
-        self.db.close()
-
     def process_item(self, item, spider):
         if not isinstance(item, LagouJobDescItem):
             return item
