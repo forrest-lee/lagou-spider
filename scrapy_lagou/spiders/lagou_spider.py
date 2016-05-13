@@ -20,8 +20,18 @@ class LagouSpider(scrapy.Spider):
     def start_requests(self):
         return [
             scrapy.FormRequest(
+                url="http://www.lagou.com/jobs/positionAjax.json?city=武汉",
+                headers={'Referer': 'http://www.lagou.com/jobs?px=default&city=武汉'},
+                formdata={
+                    'kd': self.keyword,
+                    'first': 'false',
+                    'pn': str(self.pn)
+                },
+                callback=self.parse
+            ),
+            scrapy.FormRequest(
                 url="http://www.lagou.com/jobs/positionAjax.json?city=北京",
-                headers={'Referer': 'http://www.lagou.com/jobs/list_Java?px=default&city=北京'},
+                headers={'Referer': 'http://www.lagou.com/jobs?px=default&city=北京'},
                 formdata={
                     'kd': self.keyword,
                     'first': 'false',
@@ -31,7 +41,7 @@ class LagouSpider(scrapy.Spider):
             ),
             scrapy.FormRequest(
                 url="http://www.lagou.com/jobs/positionAjax.json?city=上海",
-                headers={'Referer': 'http://www.lagou.com/jobs/list_Java?px=default&city=上海'},
+                headers={'Referer': 'http://www.lagou.com/jobs?px=default&city=上海'},
                 formdata={
                     'kd': self.keyword,
                     'first': 'false',
@@ -41,14 +51,14 @@ class LagouSpider(scrapy.Spider):
             ),
             scrapy.FormRequest(
                 url="http://www.lagou.com/jobs/positionAjax.json?city=深圳",
-                headers={'Referer': 'http://www.lagou.com/jobs/list_Java?px=default&city=%E6%B7%B1%E5%9C%B3'},
+                headers={'Referer': 'http://www.lagou.com/jobs?px=default&city=%E6%B7%B1%E5%9C%B3'},
                 formdata={
                     'kd': self.keyword,
                     'first': 'false',
                     'pn': str(self.pn)
                 },
                 callback=self.parse
-            ),
+            )
         ]
 
     def parse(self, resp):
