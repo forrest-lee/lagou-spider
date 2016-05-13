@@ -3,6 +3,8 @@ import sys
 import jieba
 import pymysql.cursors
 
+jieba.load_userdict("../userdict.txt")
+
 reload(sys)
 sys.setdefaultencoding('utf-8')
 
