@@ -13,15 +13,15 @@ class LagouSpider(scrapy.Spider):
     name = "lagou"
     allowed_domains = ["lagou.com"]
     # FIXME remove hard-coding
-    keyword = 'python'  # candicates: C, C++, Python, PHP
-    city = u'深圳'
+    keyword = 'android'  # candicates: C, C++, Python, PHP, javascript, ios, android
+    city = u'武汉'
     pn = 1  # page no.
 
     def start_requests(self):
         return [
             scrapy.FormRequest(
-                url="http://www.lagou.com/jobs/positionAjax.json?city=深圳",
-                headers={'Referer': 'http://www.lagou.com/jobs/list_python?labelWords=&fromSearch=true&suginput='},
+                url="http://www.lagou.com/jobs/positionAjax.json?city=武汉",
+                headers={'Referer': 'http://www.lagou.com/jobs/list_php?labelWords=&fromSearch=true&suginput='},
                 formdata={
                     'kd': self.keyword,
                     'first': 'false',
@@ -66,8 +66,8 @@ class LagouSpider(scrapy.Spider):
                 yield position
 
                 yield scrapy.Request('http://www.lagou.com/jobs/' + str(json_item['positionId']) + '.html',
-                                     callback=self.parse_job_desc
-                                     )
+                    callback=self.parse_job_desc
+                )
 
         self.pn = self.pn + 1
         if self.pn > js['content']['totalPageCount']:
