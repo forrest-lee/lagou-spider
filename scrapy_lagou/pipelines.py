@@ -123,4 +123,4 @@ class LagouJobDescPipeline(object):
         )
         data = (item['position_id'], item['dept'], item['job_desc'])
         self.cursor.execute(fmt, data)
-        raise DropItem
+        raise DropItem()
