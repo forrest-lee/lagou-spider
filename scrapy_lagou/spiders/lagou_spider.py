@@ -13,9 +13,11 @@ class LagouSpider(scrapy.Spider):
     name = "lagou"
     allowed_domains = ["lagou.com"]
     # FIXME remove hard-coding
-    keyword = 'C'  # candicates: C, C++, Python, PHP
-    city = u'深圳'
+    keyword = 'Java'  # candicates: C, C++, Python, PHP
+    city = u'武汉'
     pn = 1  # page no.
+    cities = ['武汉', '深圳', '北京', '上海', '广州']
+    current = 0  # 当前城市
 
     def start_requests(self):
         return [
@@ -30,28 +32,8 @@ class LagouSpider(scrapy.Spider):
                 callback=self.parse
             ),
             scrapy.FormRequest(
-                url="http://www.lagou.com/jobs/positionAjax.json?city=北京",
-                headers={'Referer': 'http://www.lagou.com/jobs?px=default&city=北京'},
-                formdata={
-                    'kd': self.keyword,
-                    'first': 'false',
-                    'pn': str(self.pn)
-                },
-                callback=self.parse
-            ),
-            scrapy.FormRequest(
-                url="http://www.lagou.com/jobs/positionAjax.json?city=上海",
-                headers={'Referer': 'http://www.lagou.com/jobs?px=default&city=上海'},
-                formdata={
-                    'kd': self.keyword,
-                    'first': 'false',
-                    'pn': str(self.pn)
-                },
-                callback=self.parse
-            ),
-            scrapy.FormRequest(
                 url="http://www.lagou.com/jobs/positionAjax.json?city=深圳",
-                headers={'Referer': 'http://www.lagou.com/jobs?px=default&city=%E6%B7%B1%E5%9C%B3'},
+                headers={'Referer': 'http://www.lagou.com/jobs?px=default&city=深圳'},
                 formdata={
                     'kd': self.keyword,
                     'first': 'false',
@@ -99,10 +81,16 @@ class LagouSpider(scrapy.Spider):
                                      )
 
         self.pn = self.pn + 1
-        if self.pn > js['content']['totalPageCount']:
+        if self.pn > js['content']['pageSize']:
             self.logger.info('Finished crawling %s pages of json feeds' %
                              js['content']['totalPageCount'])
-            return
+            if self.current > 4:
+                return
+            else:
+                self.current += 1
+                self.pn = 1
+                self.city = self.cities[self.current]
+
         # FIXME avoid duplicate
         yield scrapy.FormRequest(
             "http://www.lagou.com/jobs/positionAjax.json?city=" + urllib.quote(self.city.encode('utf8')),

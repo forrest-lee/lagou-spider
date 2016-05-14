@@ -32,7 +32,8 @@ class LagouPipeline(object):
         self.db = client.lagou
 
     def close_spider(self, spider):
-        self.db.close()
+        # client.close()
+        pass
 
 
 
@@ -62,7 +63,7 @@ class LagouPositionPipeline(LagouPipeline):
         raise DropItem()
 
 
-class LagouJobDescPipeline(object):
+class LagouJobDescPipeline(LagouPipeline):
     def process_item(self, item, spider):
         if not isinstance(item, LagouJobDescItem):
             return item
@@ -72,4 +73,4 @@ class LagouJobDescPipeline(object):
             'dept': item['dept'],
             'job_desc': item['job_desc']
         })
-        raise DropItem
+        raise DropItem()
