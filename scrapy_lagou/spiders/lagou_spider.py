@@ -13,35 +13,15 @@ class LagouSpider(scrapy.Spider):
     name = "lagou"
     allowed_domains = ["lagou.com"]
     # FIXME remove hard-coding
-    keyword = 'C'  # candicates: C, C++, Python, PHP
+    keyword = 'python'  # candicates: C, C++, Python, PHP
     city = u'深圳'
     pn = 1  # page no.
 
     def start_requests(self):
         return [
             scrapy.FormRequest(
-                url="http://www.lagou.com/jobs/positionAjax.json?city=北京",
-                headers={'Referer': 'http://www.lagou.com/jobs/list_Java?px=default&city=北京'},
-                formdata={
-                    'kd': self.keyword,
-                    'first': 'false',
-                    'pn': str(self.pn)
-                },
-                callback=self.parse
-            ),
-            scrapy.FormRequest(
-                url="http://www.lagou.com/jobs/positionAjax.json?city=上海",
-                headers={'Referer': 'http://www.lagou.com/jobs/list_Java?px=default&city=上海'},
-                formdata={
-                    'kd': self.keyword,
-                    'first': 'false',
-                    'pn': str(self.pn)
-                },
-                callback=self.parse
-            ),
-            scrapy.FormRequest(
                 url="http://www.lagou.com/jobs/positionAjax.json?city=深圳",
-                headers={'Referer': 'http://www.lagou.com/jobs/list_Java?px=default&city=%E6%B7%B1%E5%9C%B3'},
+                headers={'Referer': 'http://www.lagou.com/jobs/list_python?labelWords=&fromSearch=true&suginput='},
                 formdata={
                     'kd': self.keyword,
                     'first': 'false',
@@ -60,9 +40,10 @@ class LagouSpider(scrapy.Spider):
             # print '一共有%d页数据' % js['content']['pageSize']   # 一共有多少页
             # print('#########################')
 
-            # f = open('../log.json', 'w')
-            # f.write(str(js).encode('utf8', 'ignore'))
-            # f.close()
+            f = open('../lagou.json', 'a')
+            f.write('一共有%d页数据,当前第%d页' % (js['content']['pageSize'], self.pn))
+            f.write(json.dumps(js['content']['positionResult']['result']).encode('utf8', 'ignore'))
+            f.close()
 
             for i in range(js['content']['pageSize']):
                 json_item = js['content']['positionResult']['result'][i]
