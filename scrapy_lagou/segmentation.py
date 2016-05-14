@@ -4,7 +4,7 @@ import jieba
 import pymongo
 
 client = pymongo.MongoClient("localhost", 27017)
-jieba.load_userdict("../userdict.txt")
+# jieba.load_userdict("../userdict.txt")
 
 reload(sys)
 sys.setdefaultencoding('utf-8')
