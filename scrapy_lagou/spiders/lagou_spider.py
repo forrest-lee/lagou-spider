@@ -16,8 +16,8 @@ class LagouSpider(scrapy.Spider):
     keyword = 'javascript'  # candicates: c, c++, python, php, javascript, ios, android
     city = u'武汉'
     pn = 1  # page no.
-    keywords = ['javascript', 'ios', 'android', 'php', 'c', 'c++', 'python']
-    cities = ['武汉', '深圳', '广州', '北京', '上海']
+    keywords = ['javascript', 'ios', 'android', 'php', 'python', 'java', 'c', 'c++']
+    cities = ['武汉', '深圳', '广州', '上海', '北京']
     k = 0  # keyword下标
     c = 0  # city下标
 
