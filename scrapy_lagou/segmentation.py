@@ -5,8 +5,8 @@ import pymysql.cursors
 
 # jieba.load_userdict("../userdict.txt")
 
-reload(sys)
-sys.setdefaultencoding('utf-8')
+# reload(sys)
+# sys.setdefaultencoding('utf-8')
 
 class WordSeg(object):
 
@@ -40,6 +40,7 @@ class WordSeg(object):
         for word in self.cursor:
             ignored[word[0]] = 1
         self.ignored_words = ignored
+        print(self.ignored_words)
         # print self.ignored_words
 
     def segment(self):
@@ -50,7 +51,7 @@ class WordSeg(object):
             self.segment_one(kw)
 
     def segment_one(self, keyword):
-        print 'process keyword "%s"' % keyword
+        print('process keyword "%s"' % keyword)
 
         # XXX
         # `execute' has a nasty bug of string formatting of mysql connector,
@@ -77,7 +78,7 @@ class WordSeg(object):
             else:
                 counter[seg] = counter[seg] + 1
 
-        for (word, cnt) in counter.iteritems():
+        for (word, cnt) in counter.items():
             self.cursor.execute(
                     "insert into word_frequency (search_keyword, word, cnt) values (%s, %s, %s)",
                     (keyword, word.encode('utf8', 'ignore'), cnt)

@@ -39,12 +39,12 @@ USER_AGENTS = [
 ]
 
 PROXIES = [
-    {'ip_port': '111.11.228.75:80', 'user_pass': ''},
-    {'ip_port': '120.198.243.22:80', 'user_pass': ''},
-    {'ip_port': '111.8.60.9:8123', 'user_pass': ''},
-    {'ip_port': '101.71.27.120:80', 'user_pass': ''},
-    {'ip_port': '122.96.59.104:80', 'user_pass': ''},
-    {'ip_port': '122.224.249.122:8088', 'user_pass': ''},
+    {'ip_port': '58.23.16.241:80', 'user_pass': ''},
+    {'ip_port': '112.91.208.78:9999', 'user_pass': ''},
+    {'ip_port': '218.56.132.156:8080', 'user_pass': ''},
+    {'ip_port': '221.204.137.76:9797', 'user_pass': ''},
+    {'ip_port': '221.229.252.98:8080', 'user_pass': ''},
+    {'ip_port': '123.122.243.128:8888', 'user_pass': ''},
 ]
 
 
@@ -54,7 +54,7 @@ PROXIES = [
 # Configure a delay for requests for the same website (default: 0)
 # See http://scrapy.readthedocs.org/en/latest/topics/settings.html#download-delay
 # See also autothrottle settings and docs
-#DOWNLOAD_DELAY=3
+DOWNLOAD_DELAY=3
 # The download delay setting will honor only one of:
 #CONCURRENT_REQUESTS_PER_DOMAIN=16
 #CONCURRENT_REQUESTS_PER_IP=16
@@ -82,6 +82,13 @@ COOKIES_ENABLED=False
 #DOWNLOADER_MIDDLEWARES = {
 #    'scrapy_lagou.middlewares.MyCustomDownloaderMiddleware': 543,
 #}
+DOWNLOADER_MIDDLEWARES = {
+#    'cnblogs.middlewares.MyCustomDownloaderMiddleware': 543,
+    'scrapy_lagou.middlewares.RandomUserAgent': 1,
+    'scrapy.contrib.downloadermiddleware.httpproxy.HttpProxyMiddleware': 110,
+    #'scrapy.downloadermiddlewares.httpproxy.HttpProxyMiddleware': 110,
+    'scrapy_lagou.middlewares.ProxyMiddleware': 100,
+}
 
 # Enable or disable extensions
 # See http://scrapy.readthedocs.org/en/latest/topics/extensions.html
