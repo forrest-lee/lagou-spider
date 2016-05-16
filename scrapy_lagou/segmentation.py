@@ -78,6 +78,8 @@ class WordSeg(object):
             else:
                 counter[seg] = counter[seg] + 1
 
+        # python2
+        # for (word, cnt) in counter.iteritems():
         for (word, cnt) in counter.items():
             self.cursor.execute(
                     "insert into word_frequency (search_keyword, word, cnt) values (%s, %s, %s)",
