@@ -13,13 +13,13 @@ class LagouSpider(scrapy.Spider):
     name = "lagou"
     allowed_domains = ["lagou.com"]
     # FIXME remove hard-coding
-    keyword = 'java'  # candicates: c, c++, python, php, javascript, ios, android
-    city = u'上海'
+    keyword = '广州'  # candicates: c, c++, python, php, javascript, ios, android
+    city = u'武汉'
     pn = 1  # page no.
     # keywords = ['javascript', 'ios', 'android', 'php', 'python', 'java', 'c', 'c++']
-    keywords = ['java']
-    cities = ['上海', '北京']
+    keywords = ['产品']
     # cities = ['武汉', '深圳', '广州', '上海', '北京']
+    cities = ['广州', '上海', '北京']
     k = 0  # keyword下标
     c = 0  # city下标
 
@@ -50,10 +50,10 @@ class LagouSpider(scrapy.Spider):
             self.pageSize = js['content']['positionResult']['pageSize'] # 当前页面有多少条数据
             self.defaultPageSize = js['content']['pageSize'] # 每页数据
 
-            f = open('../lagou.json', 'a')
-            f.write('\n totalPageSize:%d, pageNo:%d, pageSize:%d条 ( %s - %s) \n' % (self.totalSize, js['content']['pageNo'], self.pageSize, self.city, self.keyword))
-            f.write(json.dumps(js['content']['positionResult']['result']).encode('utf-8', 'ignore'))
-            f.close()
+            # f = open('../lagou.json', 'a')
+            # f.write('\n totalPageSize:%d, pageNo:%d, pageSize:%d条 ( %s - %s) \n' % (self.totalSize, js['content']['pageNo'], self.pageSize, self.city, self.keyword))
+            # f.write(json.dumps(js['content']['positionResult']['result']).encode('utf-8', 'ignore'))
+            # f.close()
 
             for i in range(self.pageSize):
                 json_item = js['content']['positionResult']['result'][i]
@@ -81,24 +81,24 @@ class LagouSpider(scrapy.Spider):
 
         self.pn += 1
         if self.pn > self.totalSize / self.pageSize:
-            f = open('../lagou.json', 'a')
-            f.write('\n page:%d kIndex:%d cIndex:%d \n' % (self.pn, self.k, self.c))
+            # f = open('../lagou.json', 'a')
+            # f.write('\n page:%d kIndex:%d cIndex:%d \n' % (self.pn, self.k, self.c))
             self.pn = 0
             if self.c == 4 and self.k == len(self.keywords)-1:
                 self.logger.info('Finished crawling %s pages of json feeds' %
                                  js['content']['totalPageCount'])
-                f.write('\n branch1: page:%d kIndex:%d cIndex:%d \n' % (self.pn, self.k, self.c))
-                f.close()
+                # f.write('\n branch1: page:%d kIndex:%d cIndex:%d \n' % (self.pn, self.k, self.c))
+                # f.close()
                 return
             elif self.k == len(self.keywords)-1:
                 self.k = 0
                 self.c += 1
-                f.write('\n branch2: page:%d kIndex:%d cIndex:%d \n' % (self.pn, self.k, self.c))
-                f.close()
+                # f.write('\n branch2: page:%d kIndex:%d cIndex:%d \n' % (self.pn, self.k, self.c))
+                # f.close()
             else:
                 self.k += 1
-                f.write('\n branch3: page:%d kIndex:%d cIndex:%d \n' % (self.pn, self.k, self.c))
-                f.close()
+                # f.write('\n branch3: page:%d kIndex:%d cIndex:%d \n' % (self.pn, self.k, self.c))
+                # f.close()
 
         self.city = self.cities[self.c]
         self.keyword = self.keywords[self.k]
