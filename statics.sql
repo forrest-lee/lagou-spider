@@ -12,3 +12,6 @@ SELECT count(*) total FROM lagou.position;
 select * from position
 where company like '%腾讯%';
 
+
+select distinct position from lagou.position;
+

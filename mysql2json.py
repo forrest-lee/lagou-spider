@@ -41,30 +41,31 @@ cursor = dbc.cursor()
 # t = cursor.fetchone()['time']
 # print(cursor.fetchone())
 
-sql = 'select * from lagou.position'
+
+sql = 'select distinct search_keyword,company_id,company_short,company,company_size,finance_stage,industry,city,position_id,position_type,position_name,advantage,salary,work_year,education from lagou.position'
 result = cursor.execute(sql)
-f = open('./lagou_json/position.json', 'w')
+f = open('../lagou_json/position.json', 'w')
 for item in cursor.fetchall():
     f.write(json.dumps(item, default=default, ensure_ascii=False))
 f.close()
 
-sql = 'select * from lagou.job_desc'
+sql = 'select distinct position_id,dept,job_desc,job_responsibility,job_requirement from lagou.job_desc'
 result = cursor.execute(sql)
-f = open('./lagou_json/job_desc.json', 'w')
+f = open('../lagou_json/job_desc.json', 'w')
 for item in cursor.fetchall():
     f.write(json.dumps(item, default=default, ensure_ascii=False))
 f.close()
 
-sql = 'select * from lagou.ignored_word'
+sql = 'select distinct * from lagou.ignored_word'
 result = cursor.execute(sql)
-f = open('./lagou_json/ignored_word.json', 'w')
+f = open('../lagou_json/ignored_word.json', 'w')
 for item in cursor.fetchall():
     f.write(json.dumps(item, ensure_ascii=False))
 f.close()
 
-sql = 'select * from lagou.word_frequency'
+sql = 'select distinct * from lagou.word_frequency'
 result = cursor.execute(sql)
-f = open('./lagou_json/word_frequency.json', 'w')
+f = open('../lagou_json/word_frequency.json', 'w')
 for item in cursor.fetchall():
     f.write(json.dumps(item, ensure_ascii=False))
 f.close()
