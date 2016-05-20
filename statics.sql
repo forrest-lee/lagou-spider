@@ -13,5 +13,5 @@ select * from position
 where company like '%腾讯%';
 
 
-select distinct position from lagou.position;
+select distinct position_id,company from lagou.position;
 
