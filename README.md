@@ -16,7 +16,7 @@ python ./scrapy_lagou/segmentation.py
 
 
 # 相关说明 Instructions
-`mysql2json.py` 是用来讲mysql数据库导出成json格式以便导入mongodb的脚本
+`mysql2json.py` 是用来将mysql数据库导出成json格式以便导入mongodb的脚本
 ```shell
 mkdir lagou_json
 python mysql2json.py
